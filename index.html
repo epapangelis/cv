@@ -25,14 +25,40 @@
             color: var(--text-main);
             line-height: 1.6;
             margin: 0;
-            padding: 60px 40px;
             font-size: 16px; /* Increased from 15px */
             -webkit-font-smoothing: antialiased;
+        }
+
+        .page-wrapper {
+            container-type: inline-size;
+            width: 100%;
+            transition: all 0.3s ease;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+
+        .page-wrapper.mobile-mode {
+            max-width: 480px;
+            margin: 40px auto;
+            border: 12px solid #111;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            height: 85vh;
+            min-height: auto;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .page-wrapper.desktop-mode {
+            min-width: 1020px;
+            overflow-x: auto;
         }
 
         .container {
             max-width: 1020px;
             margin: 0 auto;
+            padding: 60px 40px;
+            box-sizing: border-box;
         }
 
         /* Header */
@@ -244,9 +270,9 @@
             line-height: 1.3;
         }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            body {
+        /* Mobile Responsiveness using Container Queries */
+        @container (max-width: 768px) {
+            .container {
                 padding: 30px 20px;
             }
             header {
@@ -313,10 +339,37 @@
                 max-width: 100%;
             }
         }
+
+        /* View Toggle Button */
+        .view-toggle-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-main);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: var(--font-family);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .view-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="page-wrapper" id="pageWrapper">
+        <div class="container">
         <header>
             <h1>Evangelos Emmanouil Papangelis</h1>
             <span class="subtitle">But you can call Me Vangelis</span>
@@ -520,10 +573,21 @@
             </div>
         </div>
     </div>
+    </div> <!-- Close page-wrapper -->
+
+    <button id="viewToggleBtn" class="view-toggle-btn">
+        <svg id="icon-mobile" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        <svg id="icon-desktop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <span id="toggleText">Preview Mobile</span>
+    </button>
+
     <script>
+        const pageWrapper = document.getElementById('pageWrapper');
+
         document.querySelectorAll('.dropdown-header').forEach(header => {
             header.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
+                // Check wrapper width for mobile behavior instead of just window width
+                if (pageWrapper.offsetWidth <= 768) {
                     const section = header.closest('.dropdown-section');
                     const isActive = section.classList.contains('active');
                     
@@ -542,6 +606,66 @@
                     }
                 }
             });
+        });
+
+        const toggleBtn = document.getElementById('viewToggleBtn');
+        const iconMobile = document.getElementById('icon-mobile');
+        const iconDesktop = document.getElementById('icon-desktop');
+        const toggleText = document.getElementById('toggleText');
+
+        let isForcedMobile = false;
+        let isForcedDesktop = false;
+
+        function updateBtnUI(isMobileLayoutPreview) {
+            if (isMobileLayoutPreview) {
+                toggleText.textContent = 'Preview Desktop';
+                iconMobile.style.display = 'none';
+                iconDesktop.style.display = 'block';
+            } else {
+                toggleText.textContent = 'Preview Mobile';
+                iconMobile.style.display = 'block';
+                iconDesktop.style.display = 'none';
+            }
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isSmallScreen = window.innerWidth <= 768;
+            
+            if (isSmallScreen) {
+                isForcedDesktop = !isForcedDesktop;
+                if (isForcedDesktop) {
+                    pageWrapper.classList.add('desktop-mode');
+                    updateBtnUI(false);
+                } else {
+                    pageWrapper.classList.remove('desktop-mode');
+                    updateBtnUI(true);
+                }
+            } else {
+                isForcedMobile = !isForcedMobile;
+                if (isForcedMobile) {
+                    pageWrapper.classList.add('mobile-mode');
+                    updateBtnUI(true);
+                } else {
+                    pageWrapper.classList.remove('mobile-mode');
+                    updateBtnUI(false);
+                }
+            }
+        });
+
+        // Initialize button UI
+        function initToggleBtn() {
+            if (window.innerWidth <= 768) {
+                updateBtnUI(true); // Small screen acts like mobile naturally
+            } else {
+                updateBtnUI(false); // Large screen acts like desktop naturally
+            }
+        }
+        
+        initToggleBtn();
+        window.addEventListener('resize', () => {
+            if (!isForcedMobile && !isForcedDesktop) {
+                initToggleBtn();
+            }
         });
     </script>
 </body>
