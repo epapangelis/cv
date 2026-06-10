@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         :root {
             --bg-color: #ffffff;
@@ -61,10 +62,19 @@
             border: 12px solid var(--phone-border);
             border-radius: 40px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            height: 85vh;
+            height: 82vh;
             min-height: auto;
             overflow-y: auto;
             position: relative;
+        }
+
+        .page-wrapper.portfolio-active {
+            overflow: hidden !important;
+            height: 100vh;
+        }
+
+        .page-wrapper.mobile-mode.portfolio-active {
+            height: 82vh;
         }
 
         .page-wrapper.desktop-mode {
@@ -77,6 +87,12 @@
             margin: 0 auto;
             padding: 60px 40px;
             box-sizing: border-box;
+        }
+
+        .page-wrapper.portfolio-active .container {
+            height: 100%;
+            padding: 0;
+            max-width: 100%;
         }
 
         /* Header */
@@ -364,8 +380,8 @@
         /* View Toggle Button */
         .view-toggle-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            top: 30px;
+            left: 30px;
             background: var(--text-main);
             color: var(--bg-color);
             border: none;
@@ -385,8 +401,8 @@
 
         @media (max-width: 480px) {
             .view-toggle-btn {
-                bottom: 20px;
-                right: 20px;
+                top: 20px;
+                left: 20px;
                 padding: 10px 18px;
                 font-size: 14px;
             }
@@ -397,7 +413,7 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.3);
         }
         .view-toggle-btn.btn-hidden {
-            transform: translateY(100px);
+            transform: translateY(-100px);
             opacity: 0;
             pointer-events: none;
         }
@@ -440,11 +456,123 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        /* Tab Bar Styles */
+        .tab-bar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-main);
+            padding: 6px;
+            border-radius: 100px;
+            display: flex;
+            gap: 5px;
+            z-index: 1001;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .page-wrapper.mobile-mode ~ .tab-bar {
+            bottom: 20px;
+        }
+
+        .tab-item {
+            padding: 8px 24px;
+            border-radius: 100px;
+            color: var(--bg-color);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: none;
+            background: transparent;
+            font-family: var(--font-family);
+        }
+
+        .tab-item.active {
+            background: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .tab-bar.btn-hidden {
+            transform: translate(-50%, 100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .portfolio-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        lottie-player {
+            width: 320px;
+            height: 230px; /* Matches the 280:200 aspect ratio of your JSON */
+            margin: 0 auto 20px auto; /* Ensures explicit horizontal centering */
+            max-width: 100%;
+            display: block;
+        }
+
+        [data-theme="dark"] lottie-player {
+            filter: brightness(1.6) saturate(0.8);
+        }
+
+        .portfolio-view h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -2px;
+            border: none !important;
+            padding: 0 !important;
+            background: linear-gradient(to bottom right, var(--text-main), var(--text-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portfolio-view p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 440px;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 480px) {
+            .tab-bar {
+                bottom: 20px;
+            }
+            .tab-item {
+                padding: 6px 18px;
+                font-size: 13px;
+            }
+            .portfolio-view h2 {
+                font-size: 32px;
+            }
+            lottie-player {
+                width: 240px;
+                height: 172px; /* Maintain aspect ratio on mobile */
+            }
+        }
     </style>
 </head>
 <body>
     <div class="page-wrapper" id="pageWrapper">
         <div class="container">
+        <div id="cv-view">
         <header>
             <h1>Evangelos Emmanouil Papangelis</h1>
             <span class="subtitle">But you can call Me Vangelis</span>
@@ -647,8 +775,20 @@
                 </section>
             </div>
         </div>
+        </div> <!-- Close cv-view -->
+
+        <div id="portfolio-view" class="portfolio-view">
+            <lottie-player src="animation.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            <h2>Say Hi to Lucas...</h2>
+            <p>I'm currently assembling my latest case studies and product experiments. Stay tuned for something special.</p>
+        </div>
     </div>
-    </div> <!-- Close page-wrapper -->
+    </div>
+
+    <nav class="tab-bar" id="tabBar">
+        <button class="tab-item active" id="cvTab">CV</button>
+        <button class="tab-item" id="portfolioTab">Portfolio</button>
+    </nav>
 
     <button id="viewToggleBtn" class="view-toggle-btn">
         <svg id="icon-mobile" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
@@ -685,6 +825,37 @@
                 iconMoon.style.display = 'none';
             }
         });
+
+        // Tab Switching Logic
+        const cvTab = document.getElementById('cvTab');
+        const portfolioTab = document.getElementById('portfolioTab');
+        const cvView = document.getElementById('cv-view');
+        const portfolioView = document.getElementById('portfolio-view');
+
+        function switchTab(tab) {
+            if (tab === 'cv') {
+                cvView.style.display = 'block';
+                portfolioView.style.display = 'none';
+                cvTab.classList.add('active');
+                portfolioTab.classList.remove('active');
+                pageWrapper.classList.remove('portfolio-active');
+            } else {
+                cvView.style.display = 'none';
+                portfolioView.style.display = 'flex';
+                cvTab.classList.remove('active');
+                portfolioTab.classList.add('active');
+                pageWrapper.classList.add('portfolio-active');
+            }
+            
+            // Scroll to top when switching views
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (pageWrapper.classList.contains('mobile-mode')) {
+                pageWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        cvTab.addEventListener('click', () => switchTab('cv'));
+        portfolioTab.addEventListener('click', () => switchTab('portfolio'));
 
         const pageWrapper = document.getElementById('pageWrapper');
 
@@ -759,6 +930,13 @@
 
         // Initialize button UI
         function initToggleBtn() {
+            // Detect native mobile device to hide the preview utility
+            const isNativeMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isNativeMobile) {
+                toggleBtn.style.display = 'none';
+                return;
+            }
+
             if (window.innerWidth <= 768) {
                 updateBtnUI(true); // Small screen acts like mobile naturally
             } else {
@@ -775,6 +953,7 @@
 
         // Scroll behavior for floating buttons
         let lastScrollY = 0;
+        const tabBar = document.getElementById('tabBar');
         const SCROLL_THRESHOLD = 5; // Minimum scroll distance to trigger
 
         function handleScroll(e) {
@@ -787,10 +966,12 @@
                 // Scrolling down - hide buttons
                 toggleBtn.classList.add('btn-hidden');
                 themeToggleBtn.classList.add('btn-hidden');
+                tabBar.classList.add('btn-hidden');
             } else {
                 // Scrolling up or at the very top - show buttons
                 toggleBtn.classList.remove('btn-hidden');
                 themeToggleBtn.classList.remove('btn-hidden');
+                tabBar.classList.remove('btn-hidden');
             }
             lastScrollY = currentScrollY;
         }
