@@ -11,12 +11,30 @@
         :root {
             --bg-color: #ffffff;
             --text-main: #000000;
-            --text-light: #666666;
+            --text-light: #222222;
+            --text-muted: #444444;
             --text-accent: #888888;
             --link-color: #3b82f6;
+            --border-color: #000000;
+            --border-light: #e0e0e0;
+            --link-underline: rgba(0, 0, 0, 0.15);
+            --phone-border: #1a1a1a;
             --font-family: 'Manrope', sans-serif;
             --left-col-width: 280px;
             --gap: 70px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-main: #ffffff;
+            --text-light: #e0e0e0;
+            --text-muted: #cccccc;
+            --text-accent: #aaaaaa;
+            --link-color: #60a5fa;
+            --border-color: #ffffff;
+            --border-light: #333333;
+            --link-underline: rgba(255, 255, 255, 0.2);
+            --phone-border: #444444;
         }
 
         body {
@@ -40,7 +58,7 @@
         .page-wrapper.mobile-mode {
             max-width: 480px;
             margin: 40px auto;
-            border: 12px solid #111;
+            border: 12px solid var(--phone-border);
             border-radius: 40px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             height: 85vh;
@@ -124,14 +142,14 @@
 
         .right-column > section > h2 {
             padding-bottom: 12px;
-            border-bottom: 1px solid #000;
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 25px;
         }
 
         /* Text Styles */
         p {
             margin: 0 0 12px 0;
-            color: #222;
+            color: var(--text-light);
             font-weight: 400;
             line-height: 1.6;
         }
@@ -143,14 +161,14 @@
 
         li {
             margin-bottom: 6px;
-            color: #222;
+            color: var(--text-light);
             font-weight: 400;
             line-height: 1.6;
         }
 
         strong {
             font-weight: 700;
-            color: #000;
+            color: var(--text-main);
         }
 
         /* Experience Items */
@@ -176,7 +194,7 @@
             text-decoration: underline;
             text-decoration-thickness: 2px;
             text-underline-offset: 4px;
-            text-decoration-color: rgba(0, 0, 0, 0.15);
+            text-decoration-color: var(--link-underline);
             transition: all 0.2s ease;
         }
 
@@ -187,14 +205,14 @@
 
         .date {
             font-size: 16px; /* Increased from 14px */
-            color: #000;
+            color: var(--text-main);
             white-space: nowrap;
             font-weight: 500;
         }
 
         .location {
             font-size: 15px; /* Increased from 13px */
-            color: #888;
+            color: var(--text-accent);
             margin-bottom: 8px;
             font-weight: 400;
         }
@@ -203,7 +221,7 @@
             font-size: 17px; /* Increased from 15px */
             font-weight: 500;
             margin-bottom: 15px;
-            color: #444;
+            color: var(--text-muted);
         }
 
         .skills-tools-header {
@@ -211,10 +229,11 @@
             margin-top: 20px;
             margin-bottom: 8px;
             font-size: 15px; /* Increased from 13.5px */
+            color: var(--text-main);
         }
 
         .link-text {
-            color: #4a90e2;
+            color: var(--link-color);
             text-decoration: underline;
             text-decoration-thickness: 1px;
             text-underline-offset: 3px;
@@ -225,7 +244,7 @@
             transition: all 0.2s ease;
         }
         .link-text:hover {
-            color: #357abd;
+            opacity: 0.8;
         }
 
         /* Left Column Specifics */
@@ -238,7 +257,7 @@
         .skills-list li, .tools-list li, .languages-list li {
             margin-bottom: 10px;
             font-weight: 500;
-            color: #111;
+            color: var(--text-main);
         }
 
         .social-link {
@@ -246,7 +265,7 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            color: #111;
+            color: var(--text-main);
             margin-bottom: 14px;
             font-weight: 500;
             font-size: 16px; /* Increased from 15px */
@@ -361,11 +380,65 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, opacity 0.3s ease;
         }
+
+        @media (max-width: 480px) {
+            .view-toggle-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+        }
+
         .view-toggle-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+        .view-toggle-btn.btn-hidden {
+            transform: translateY(100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            position: fixed;
+            top: 30px; /* Moved to top-right corner */
+            right: 30px;
+            background: var(--text-main);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, opacity 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .theme-toggle-btn {
+                top: 20px;
+                right: 20px;
+                width: 42px;
+                height: 42px;
+            }
+        }
+
+        .theme-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+        .theme-toggle-btn.btn-hidden {
+            transform: translateY(-100px);
+            opacity: 0;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -583,7 +656,36 @@
         <span id="toggleText">Preview Mobile</span>
     </button>
 
+    <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+        <svg id="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg id="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+
     <script>
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const iconSun = document.getElementById('icon-sun');
+        const iconMoon = document.getElementById('icon-moon');
+
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            iconSun.style.display = 'block';
+            iconMoon.style.display = 'none';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                iconSun.style.display = 'none';
+                iconMoon.style.display = 'block';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                iconSun.style.display = 'block';
+                iconMoon.style.display = 'none';
+            }
+        });
+
         const pageWrapper = document.getElementById('pageWrapper');
 
         document.querySelectorAll('.dropdown-header').forEach(header => {
@@ -670,6 +772,31 @@
                 initToggleBtn();
             }
         });
+
+        // Scroll behavior for floating buttons
+        let lastScrollY = 0;
+        const SCROLL_THRESHOLD = 5; // Minimum scroll distance to trigger
+
+        function handleScroll(e) {
+            const currentScrollY = (e.target === window || e.target === document) ? window.scrollY : e.target.scrollTop;
+            
+            // Ignore tiny movements
+            if (Math.abs(currentScrollY - lastScrollY) < SCROLL_THRESHOLD) return;
+
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                // Scrolling down - hide buttons
+                toggleBtn.classList.add('btn-hidden');
+                themeToggleBtn.classList.add('btn-hidden');
+            } else {
+                // Scrolling up or at the very top - show buttons
+                toggleBtn.classList.remove('btn-hidden');
+                themeToggleBtn.classList.remove('btn-hidden');
+            }
+            lastScrollY = currentScrollY;
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        pageWrapper.addEventListener('scroll', handleScroll, { passive: true });
     </script>
 </body>
 </html>
